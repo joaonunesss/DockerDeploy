@@ -4,23 +4,27 @@ services:
     container_name: nginx
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - ./web:/var/www/html
     depends_on:
       - wordpress
     networks:
       - wp_network
+    restart: always
 
   wordpress:
     build: srcs/wordpress/.
     container_name: wp-php
     volumes:
-      - ./web:/var/www/html
+      #- ./web:/var/www/html
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
     networks:
       - wp_network
+    restart: always
 
-  db:
+  mariadb:
     build: srcs/mariadb/.
     container_name: mariadb
     environment:
@@ -28,9 +32,16 @@ services:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: user
       MYSQL_PASSWORD: inception
+    volumes:
+      - wordpress_db_data:/var/lib/mysql
     networks:
       - wp_network
+    restart: always
 
 networks:
   wp_network:
     driver: bridge
+
+volumes:
+  wordpress_data:     #Volume for WordPress files
+  wordpress_db_data:  #Volume for WordPress database
