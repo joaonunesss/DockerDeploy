@@ -4,11 +4,33 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./web:/var/www/html
+    depends_on:
+      - wordpress
+    networks:
+      - wp_network
 
   wordpress:
     build: srcs/wordpress/.
     container_name: wp-php
     volumes:
       - ./web:/var/www/html
+    networks:
+      - wp_network
+
+  db:
+    build: srcs/mariadb/.
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: inception
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: user
+      MYSQL_PASSWORD: inception
+    networks:
+      - wp_network
+
+networks:
+  wp_network:
+    driver: bridge

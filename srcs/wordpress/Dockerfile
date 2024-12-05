@@ -3,10 +3,16 @@ FROM debian:bullseye
 # Install required dependencies and PHP  with PHP-FPM
 RUN apt update && \
     apt upgrade -y && \
-    apt -y install php7.4-fpm
+    apt -y install \
+    php7.4-fpm \
+    php-mysqli \
+    curl
 
-RUN mkdir /run/php
+RUN mkdir -p /run/php
     
 COPY www.conf /etc/php/7.4/fpm/pool.d/.
+COPY script.sh .
 
-CMD ["php-fpm7.4", "-F"]
+RUN chmod +x script.sh
+
+CMD ["./script.sh"]
