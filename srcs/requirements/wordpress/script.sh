@@ -1,6 +1,4 @@
 #!/bin/bash
-echo -e "\e[32mWaiting for MariaDB to initialize...\e[0m"
-sleep 5
 
 cd /var/www/html
 
@@ -8,19 +6,22 @@ cd /var/www/html
 if [ -f "wp-config.php" ]; then
     echo -e "\e[34mWordPress is already installed.\e[0m"
 else
-    # - Install WordPress using WP-CLI
+    # - Fetches the wp-cli.phar file, which is the WordPress command-line tool.
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     chmod +x wp-cli.phar
 
-    # - change the default values
+    # - Downloads the latest WordPress files
     ./wp-cli.phar core download --allow-root
 
+    # - Create the wp-config.php file, which contains WordPress’s
+    #       database connection settings.
     ./wp-cli.phar config create --dbname="${DB_NAME}" \
                                 --dbuser="${DB_USER}" \
                                 --dbpass="${DB_PASS}" \
                                 --dbhost="${DB_HOST}" \
                                 --allow-root
 
+    # - Install WordPress and sets up an admin user
     ./wp-cli.phar core install --url="${WP_URL}" \
                                --title="${WP_TITLE}" \
                                --admin_user="${WP_ADM_USER}" \
@@ -28,7 +29,7 @@ else
                                --admin_email="${WP_ADM_EMAIL}" \
                                --allow-root
  
-
+    # - Create a new user
     ./wp-cli.phar user create ${WP_USER} \
                               ${WP_USER_EMAIL} \
                               --role="${WP_USER_ROLE}" \
