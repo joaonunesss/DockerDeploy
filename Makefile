@@ -23,7 +23,8 @@ down:
 
 prune:
 	docker system prune -a
+	@sudo rm -rf $(VOLUMES_FOLDER)
 
 mkdirs:
-	@sudo mkdir -p $(VOLUMES_FOLDER)/mariadb
+	@sudo mkdir -p $(VOLUMES_FOLDER)/db
 	@sudo mkdir -p $(VOLUMES_FOLDER)/wordpress

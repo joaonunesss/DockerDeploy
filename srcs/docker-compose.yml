@@ -51,7 +51,7 @@ volumes:
   mariadb_data:
     driver: local
     driver_opts:
-      device: /home/jmarinho/data/mariadb
+      device: /home/jmarinho/data/db
       o: bind
       type: none
       
