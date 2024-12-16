@@ -11,4 +11,4 @@ COPY setup.sh .
 RUN chmod +x setup.sh
 RUN mkdir -p /run/mysqld
 
-CMD [ "./setup.sh"]
+ENTRYPOINT ["./setup.sh"]
